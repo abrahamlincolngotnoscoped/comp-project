@@ -1,22 +1,18 @@
 import mysql.connector
-from prettytable import PrettyTable  # Import PrettyTable
+from prettytable import PrettyTable
 
-# Function to connect to the MySQL database and create database and tables if they don't exist
 def connect_to_database():
-    # Connect to the MySQL server without specifying a database
     conn = mysql.connector.connect(
         host="localhost",
         user="root",
         password="1234",
     )
 
-    # Create the database if it doesn't exist
     cursor = conn.cursor()
     cursor.execute("CREATE DATABASE IF NOT EXISTS library")
 
     conn.close()
 
-    # Connect to the 'library' database
     conn = mysql.connector.connect(
         host="localhost",
         user="root",
@@ -24,7 +20,6 @@ def connect_to_database():
         database="library"
     )
 
-    # Create tables if they don't exist
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS DenormalizedLibrary (
@@ -59,7 +54,6 @@ def connect_to_database():
 
     return conn
 
-# Function to add a new book to the library
 def add_book():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -81,7 +75,6 @@ def add_book():
     conn.close()
     print("Book added successfully!")
 
-# Function to search for books by title
 def search_books_by_title():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -97,15 +90,14 @@ def search_books_by_title():
         print("Search results:")
         table = PrettyTable(["Book ID", "ISBN", "Title", "Author", "Publisher", "Publication Date", "Edition", "Genre"])
         for book in books:
-            table.add_row(book[0:8])  # Add the relevant columns to the table
+            table.add_row(book[0:8])
 
-        print(table)  # Print the table
+        print(table)
     else:
         print("No books found with the given title.")
 
     conn.close()
 
-# Function to check due books
 def check_due_books():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -122,15 +114,14 @@ def check_due_books():
         print("Due books:")
         table = PrettyTable(["Title", "Borrower", "Due Date"])
         for book in due_books:
-            table.add_row(book[0:3])  # Add the relevant columns to the table
+            table.add_row(book[0:3])
 
-        print(table)  # Print the table
+        print(table)
     else:
         print("No books are currently due.")
 
     conn.close()
 
-# Function to mark a book as returned
 def mark_book_returned():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -148,7 +139,6 @@ def mark_book_returned():
     conn.close()
     print("Book marked as returned.")
 
-# Function to sort books by genre
 def sort_books_by_genre():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -164,15 +154,14 @@ def sort_books_by_genre():
         print(f"Books in the {genre} genre:")
         table = PrettyTable(["Book ID", "ISBN", "Title", "Author", "Publisher", "Publication Date", "Edition", "Genre"])
         for book in books:
-            table.add_row(book[0:8])  # Add the relevant columns to the table
+            table.add_row(book[0:8])
 
-        print(table)  # Print the table
+        print(table)
     else:
         print(f"No books found in the {genre} genre.")
 
     conn.close()
 
-# Function to search for books by publisher name
 def search_books_by_publisher():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -188,15 +177,14 @@ def search_books_by_publisher():
         print("Books from the publisher:")
         table = PrettyTable(["Book ID", "ISBN", "Title", "Author", "Publisher", "Publication Date", "Edition", "Genre"])
         for book in books:
-            table.add_row(book[0:8])  # Add the relevant columns to the table
+            table.add_row(book[0:8])
 
-        print(table)  # Print the table
+        print(table)
     else:
         print("No books found from the specified publisher.")
 
     conn.close()
 
-# Function to search for books by publication date
 def search_books_by_date():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -212,15 +200,14 @@ def search_books_by_date():
         print("Books published on the specified date:")
         table = PrettyTable(["Book ID", "ISBN", "Title", "Author", "Publisher", "Publication Date", "Edition", "Genre"])
         for book in books:
-            table.add_row(book[0:8])  # Add the relevant columns to the table
+            table.add_row(book[0:8])
 
-        print(table)  # Print the table
+        print(table)
     else:
         print("No books found with the specified publication date.")
 
     conn.close()
 
-# Function to search for books by author name
 def search_books_by_author():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -236,15 +223,14 @@ def search_books_by_author():
         print("Books by the author:")
         table = PrettyTable(["Book ID", "ISBN", "Title", "Author", "Publisher", "Publication Date", "Edition", "Genre"])
         for book in books:
-            table.add_row(book[0:8])  # Add the relevant columns to the table
+            table.add_row(book[0:8])
 
-        print(table)  # Print the table
+        print(table)
     else:
         print("No books found by the specified author.")
 
     conn.close()
 
-# Function to edit book details
 def edit_book_details():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -277,7 +263,6 @@ def edit_book_details():
 
     conn.close()
 
-# Function to issue a book to a person
 def issue_book():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -301,7 +286,6 @@ def issue_book():
 
     conn.close()
 
-# Function to add a new library member
 def add_member():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -317,7 +301,6 @@ def add_member():
     conn.close()
     print("Library member added successfully!")
 
-# Function to list all library members
 def list_members():
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -330,27 +313,24 @@ def list_members():
         print("List of Library Members:")
         table = PrettyTable(["Member ID", "Member Name"])
         for member in members:
-            table.add_row(member)  # Add the relevant columns to the table
+            table.add_row(member)
 
-        print(table)  # Print the table
+        print(table)
     else:
         print("No library members found.")
 
     conn.close()
 
-# Function to remove a library member
 def remove_member():
     conn = connect_to_database()
     cursor = conn.cursor()
 
     member_id = input("Enter the ID of the library member you want to remove: ")
 
-    # First, check if the member exists
     cursor.execute('SELECT * FROM Membership WHERE member_id = %s', (member_id,))
     member = cursor.fetchone()
 
     if member:
-        # Remove the member
         cursor.execute('DELETE FROM Membership WHERE member_id = %s', (member_id,))
         conn.commit()
         print("Library member removed successfully.")
@@ -359,7 +339,6 @@ def remove_member():
 
     conn.close()
 
-# Updated menu with additional options
 def display_menu():
     print("\nLibrary Management System")
     print("1. Add a new book")
@@ -378,7 +357,6 @@ def display_menu():
     print("14. To create database and tables if it doesnt exist")
     print("15. Exit")
 
-# Main program loop
 while True:
     display_menu()
     choice = input("Enter your choice: ")
@@ -408,7 +386,7 @@ while True:
     elif choice == '12':
         list_members()
     elif choice == '13':
-        remove_member()  # Call the remove_member function
+        remove_member()
     elif choice == '14':
         connect_to_database()
     elif choice == '15':
@@ -416,4 +394,3 @@ while True:
         break
     else:
         print("Invalid choice. Please try again.")
-
