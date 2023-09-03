@@ -1,19 +1,16 @@
 import mysql.connector
+from prettytable import PrettyTable
 
-# MySQL connection details
 host = "localhost"
 user = "root"
 password = "1234"
 
-# Create a connection function
 def create_connection(database_name):
     return mysql.connector.connect(host=host, user=user, password=password, database=database_name)
 
-# Create a table function
 def create_table(conn):
     cursor = conn.cursor()
     
-    # Create the `place` table if it doesn't exist
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS place (
       place_name VARCHAR(255) NOT NULL,
@@ -29,11 +26,9 @@ def create_table(conn):
     conn.commit()
     print("Table 'place' created successfully.")
 
-# Add a place function
 def add_place(conn, place_name, place_type, reviews, rating, price_range, opening_hours, website, contact_number):
     cursor = conn.cursor()
     
-    # Insert the data into the table
     cursor.execute("""
     INSERT INTO place (place_name, place_type, reviews, rating, price_range, opening_hours, website, contact_number)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
@@ -41,86 +36,75 @@ def add_place(conn, place_name, place_type, reviews, rating, price_range, openin
     conn.commit()
     print("Place added successfully.")
 
-# Search for a place function
 def search_place(conn, place_name):
     cursor = conn.cursor()
     
-    # Get the place details
     cursor.execute("SELECT * FROM place WHERE place_name = %s;", (place_name,))
     place_details = cursor.fetchone()
 
     if place_details:
         print("Place Details:")
-        print("Place Name:", place_details[0])
-        print("Place Type:", place_details[1])
-        print("Reviews:", place_details[2])
-        print("Rating:", place_details[3])
-        print("Price Range:", place_details[4])
-        print("Opening Hours:", place_details[5])
-        print("Website:", place_details[6])
-        print("Contact Number:", place_details[7])
+        table = PrettyTable(["Place Name", "Place Type", "Reviews", "Rating", "Price Range", "Opening Hours", "Website", "Contact Number"])
+        table.add_row(place_details)
+        print(table)
     else:
         print(f"Place '{place_name}' not found.")
 
-# Search by Contact Number function
 def search_by_contact_number(conn, contact_number):
     cursor = conn.cursor()
     
-    # Get places with the specified contact number
     cursor.execute("SELECT * FROM place WHERE contact_number = %s;", (contact_number,))
     places = cursor.fetchall()
 
     if places:
         print(f"Places with contact number '{contact_number}':")
+        table = PrettyTable(["Place Name"])
         for place in places:
-            print("Place Name:", place[0])
+            table.add_row([place[0]])
+        print(table)
     else:
         print(f"No places found with contact number '{contact_number}'.")
 
-# Delete a Place function
 def delete_place(conn, place_name):
     cursor = conn.cursor()
     
-    # Delete the place
     cursor.execute("DELETE FROM place WHERE place_name = %s;", (place_name,))
     conn.commit()
     print(f"Place '{place_name}' deleted successfully.")
 
-# Search by Price Range function
 def search_by_price_range(conn, min_price, max_price):
     if min_price > max_price:
         raise ValueError("Minimum price must be less than or equal to maximum price")
     
     cursor = conn.cursor()
     
-    # Get places within the specified price range
     cursor.execute("SELECT * FROM place WHERE rating BETWEEN %s AND %s;", (min_price, max_price))
     places = cursor.fetchall()
 
     if places:
         print(f"Places in price range {min_price} to {max_price}:")
+        table = PrettyTable(["Place Name"])
         for place in places:
-            print("Place Name:", place[0])
+            table.add_row([place[0]])
+        print(table)
     else:
         print(f"No places found in the price range {min_price} to {max_price}.")
 
-# Sort by Opening Hours function
 def sort_by_opening_hours(conn):
     cursor = conn.cursor()
     
-    # Sort places by opening hours
     cursor.execute("SELECT * FROM place ORDER BY opening_hours;")
     sorted_places = cursor.fetchall()
 
     if sorted_places:
         print("Places sorted by opening hours:")
+        table = PrettyTable(["Place Name", "Opening Hours"])
         for place in sorted_places:
-            print("Place Name:", place[0])
-            print("Opening Hours:", place[5])
+            table.add_row([place[0], place[5]])
+        print(table)
     else:
         print("No places found in the database.")
 
-# Menu loop
 while True:
     print("\nMenu:")
     print("1. Create Table")
@@ -191,7 +175,6 @@ while True:
 
     elif choice == "9":
         print("Exiting the program.")
-        break  # Exit the loop and end the program
-
+        break
     else:
         print("Invalid choice. Please enter a valid option.")
